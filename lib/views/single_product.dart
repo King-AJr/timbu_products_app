@@ -1,11 +1,13 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:timbu_mobile_app/models/product.model.dart';
+import 'package:timbu_mobile_app/util/constants/sizes.dart';
 
 class ProductDetailPage extends StatelessWidget {
   final ProductModel product;
 
-  const ProductDetailPage({Key? key, required this.product}) : super(key: key);
+  const ProductDetailPage({super.key, required this.product});
 
   @override
   Widget build(BuildContext context) {
@@ -13,38 +15,42 @@ class ProductDetailPage extends StatelessWidget {
       appBar: AppBar(
         title: Text(product.name),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back_ios),
           onPressed: () => Get.back(),
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(Sizes.allRoundPadding),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Center(
-              child: Image.network(
-                product.photo,
+              child: CachedNetworkImage(
                 height: 300,
+                imageUrl: product.photo,
+                fit: BoxFit.cover,
+                placeholder: (context, url) =>
+                    const CircularProgressIndicator(),
+                errorWidget: (context, url, error) => const Icon(Icons.error),
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: Sizes.spaceBetweenItems),
             Text(
               product.name,
-              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              style: Theme.of(context).textTheme.bodyLarge,
             ),
             Text(
               product.description,
               overflow: TextOverflow.ellipsis,
               maxLines: 5,
-              style: const TextStyle(fontSize: 16, color: Colors.grey),
+              style: Theme.of(context).textTheme.labelLarge,
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: Sizes.spaceBetweenItems),
             Text(
               'Stock: ${product.stock}',
-              style: const TextStyle(fontSize: 16),
+              style: Theme.of(context).textTheme.labelLarge,
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: Sizes.spaceBetweenItems),
             const Spacer(),
             Row(
               children: <Widget>[
